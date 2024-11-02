@@ -1,21 +1,21 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, Response
 app = Flask(__name__)
 
 
-todos = [ { "label": "My first task", "done": False } ]
+todos: list[dict[str, bool]] = [{ "label": "My first task", "done": False }]
 
-@app.route('/myroute', methods=['GET'])
-def hello_world():
+@app.route('/myroute', methods=['GET']) 
+def hello_world() -> Response:
     return 'Hello World!'
 
 @app.route('/todos', methods=['GET'])
-def get_todos():
+def get_todos() -> Response:
     return jsonify(todos)
 
 
 
 @app.route('/todos', methods=['POST'])
-def add_new_todo():
+def add_new_todo() -> Response:
     request_body = request.json
     print("Incoming request with the following body", request_body)
     todos.append(request_body)
@@ -23,8 +23,8 @@ def add_new_todo():
 
 
 @app.route('/todos/<int:position>', methods=['DELETE'])
-def delete_todo(position):
-    print("Serà Borrado:", position)
+def delete_todo(position) -> Response:
+    print("Será Borrado:", position)
 
     if position < 0 or position >= len(todos):
         return jsonify({"error": "Posición inválida"}), 400
